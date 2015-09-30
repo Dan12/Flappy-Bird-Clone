@@ -22,6 +22,8 @@ public class MainScript : MonoBehaviour {
 		else if (ms != this)
 			Destroy (gameObject);
 
+		hideScoreText ();
+
 		// placing the bird
 		Instantiate(birdObject);
 		// calling "CreateObstacle" function after 0 seconds, then each 1.5 seconds, 
@@ -44,6 +46,14 @@ public class MainScript : MonoBehaviour {
 			// setting lower pipe position
 			lowerPipe.transform.position = new Vector2 (4f, randomPos - pipeHole - 4.8f);
 		}
+	}
+
+	public void hideScoreText(){
+		scoreText.enabled = false;
+	}
+	
+	public void showScoreText(){
+		scoreText.enabled = true;
 	}
 
 	public void hideInstrucText(){

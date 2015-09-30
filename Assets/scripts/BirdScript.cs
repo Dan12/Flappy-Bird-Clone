@@ -28,17 +28,19 @@ public class BirdScript : MonoBehaviour {
 
 	// function to be executed at each frame
 	void Update () {
+		// getting the real position, in pixels, of the bird on the stage
+		Vector2 stagePos = Camera.main.WorldToScreenPoint(transform.position);
+
 		// waiting for mouse input
-		if (Input.GetButtonDown("Fire1")) {
+		if (Input.GetButtonDown("Fire1") && stagePos.y < Screen.height) {
 			if(!startGame){
 				GetComponent<Rigidbody2D>().isKinematic = false;
 				MainScript.ms.hideInstrucText();
+				MainScript.ms.showScoreText();
 				startGame = true;
 			}
-			// setting bird's rigid body velocity to zero
-			GetComponent<Rigidbody2D>().velocity = Vector2.zero;
-			// adding jump force to bird's rigid body
-			GetComponent<Rigidbody2D>().AddForce(jumpForce);
+
+			jump ();
 
 			if(transform.eulerAngles.z != 0)
 				transform.eulerAngles = new Vector3(0f,0f,transform.eulerAngles.z+90f);
@@ -51,13 +53,23 @@ public class BirdScript : MonoBehaviour {
 			GetComponent<Rigidbody2D>().angularVelocity = 0f;
 		}
 
-		// getting the real position, in pixels, of the bird on the stage
-		Vector2 stagePos = Camera.main.WorldToScreenPoint(transform.position);
+		if(stagePos.y > Screen.height)
+			// setting bird's rigid body velocity to zero
+			GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+
 		// if the bird leaves the stage...
-		if (stagePos.y > Screen.height || stagePos.y < 0){
+		if (stagePos.y < 0 && GetComponent<Rigidbody2D>().velocity.y < 0){
+			jump ();
 			// ... call die function
 			die();
 		}
+	}
+
+	void jump(){
+		// setting bird's rigid body velocity to zero
+		GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+		// adding jump force to bird's rigid body
+		GetComponent<Rigidbody2D>().AddForce(jumpForce);
 	}
 	
 	// function to be executed once the bird enters in collision with anything
@@ -86,7 +98,8 @@ public class BirdScript : MonoBehaviour {
 		Time.timeScale = 1f;
 		gameover = false;
 		startGame = false;
-		MainScript.ms.showInstructText();
+		//MainScript.ms.showInstructText();
+		MainScript.ms.hideScoreText ();
 		// reload the current scene - actually restart the game
 		Application.LoadLevel(Application.loadedLevel);
 	}
