@@ -14,6 +14,8 @@ public class MainScript : MonoBehaviour {
 	private int score;
 
 	public static MainScript ms = null;
+
+	private int highScore;
 	
 	// function to be executed once the script started
 	void Start () {
@@ -21,6 +23,8 @@ public class MainScript : MonoBehaviour {
 			ms = this;
 		else if (ms != this)
 			Destroy (gameObject);
+		
+		highScore = PlayerPrefs.GetInt ("High Score", 0);
 
 		hideScoreText ();
 
@@ -45,15 +49,16 @@ public class MainScript : MonoBehaviour {
 			GameObject lowerPipe = Instantiate (pipeObject);
 			// setting lower pipe position
 			lowerPipe.transform.position = new Vector2 (4f, randomPos - pipeHole - 4.8f);
+			lowerPipe.transform.eulerAngles = new Vector3(180f,0f,0f);
 		}
 	}
 
 	public void hideScoreText(){
-		scoreText.enabled = false;
+		scoreText.text = "High Score: " + highScore;
 	}
 	
 	public void showScoreText(){
-		scoreText.enabled = true;
+		scoreText.text = "Score: " + score/2;
 	}
 
 	public void hideInstrucText(){
@@ -67,5 +72,14 @@ public class MainScript : MonoBehaviour {
 	public void pointUp(){
 		score++;
 		scoreText.text = "Score: " + score/2;
+	}
+
+	public void setHighScore(){
+		print (highScore);
+		if (score/2 > highScore) {
+			highScore = score/2;
+			PlayerPrefs.SetInt ("High Score", highScore);
+			print (PlayerPrefs.GetInt("High Score"));
+		}
 	}
 }

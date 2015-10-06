@@ -8,6 +8,8 @@ public class BirdScript : MonoBehaviour {
 
 	public float angularSpin = 400f;
 
+	public GameObject blood;
+
 	private float resetDelay = 1f;
 
 	private bool gameover = false;
@@ -23,7 +25,7 @@ public class BirdScript : MonoBehaviour {
 			Destroy (gameObject);
 
 		// placing the bird
-		transform.position = new Vector2(-2f,0f);
+		transform.position = new Vector2(-6f,0f);
 	}
 
 	// function to be executed at each frame
@@ -32,11 +34,13 @@ public class BirdScript : MonoBehaviour {
 		Vector2 stagePos = Camera.main.WorldToScreenPoint(transform.position);
 
 		// waiting for mouse input
-		if (Input.GetButtonDown("Fire1") && stagePos.y < Screen.height) {
+		if (Input.GetButtonDown("Fire1") && stagePos.y < Screen.height && !gameover) {
 			if(!startGame){
 				GetComponent<Rigidbody2D>().isKinematic = false;
 				MainScript.ms.hideInstrucText();
 				MainScript.ms.showScoreText();
+				// placing the bird
+				transform.position = new Vector2(-2f,0f);
 				startGame = true;
 			}
 
@@ -48,7 +52,7 @@ public class BirdScript : MonoBehaviour {
 			GetComponent<Rigidbody2D>().angularVelocity = -angularSpin;
 		}	
 
-		if (transform.eulerAngles.z > 20 && transform.eulerAngles.z < 180) {
+		if (transform.eulerAngles.z > 20 && transform.eulerAngles.z < 180 && !gameover) {
 			transform.eulerAngles = new Vector3(0f,0f,0f);
 			GetComponent<Rigidbody2D>().angularVelocity = 0f;
 		}
@@ -82,6 +86,7 @@ public class BirdScript : MonoBehaviour {
 		if (!gameover) {
 			Time.timeScale = 0.5f;
 			gameover = true;
+			Instantiate(blood, transform.position, Quaternion.Euler(transform.eulerAngles));
 			Invoke ("Reset", resetDelay);
 		}
 	}
@@ -95,6 +100,7 @@ public class BirdScript : MonoBehaviour {
 	}
 
 	void Reset(){
+		MainScript.ms.setHighScore ();
 		Time.timeScale = 1f;
 		gameover = false;
 		startGame = false;
