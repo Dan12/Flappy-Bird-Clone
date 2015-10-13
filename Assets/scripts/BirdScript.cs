@@ -87,6 +87,7 @@ public class BirdScript : MonoBehaviour {
 			Time.timeScale = 0.5f;
 			gameover = true;
 			Instantiate(blood, transform.position, Quaternion.Euler(transform.eulerAngles));
+			GetComponent<Rigidbody2D>().angularVelocity = -angularSpin;
 			Invoke ("Reset", resetDelay);
 		}
 	}
