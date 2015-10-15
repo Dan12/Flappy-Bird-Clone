@@ -10,6 +10,10 @@ public class BirdScript : MonoBehaviour {
 
 	public GameObject blood;
 
+	public AudioClip flapAudio;
+	public AudioClip deadAudio;
+	private AudioSource source;
+
 	private float resetDelay = 1f;
 
 	private bool gameover = false;
@@ -23,6 +27,8 @@ public class BirdScript : MonoBehaviour {
 			bird = this;
 		else if (bird != this)
 			Destroy (gameObject);
+
+		source = GetComponent<AudioSource>();
 
 		// placing the bird
 		transform.position = new Vector2(-6f,0f);
@@ -43,6 +49,8 @@ public class BirdScript : MonoBehaviour {
 				transform.position = new Vector2(-2f,0f);
 				startGame = true;
 			}
+
+			source.PlayOneShot(flapAudio);
 
 			jump ();
 
@@ -86,6 +94,9 @@ public class BirdScript : MonoBehaviour {
 		if (!gameover) {
 			Time.timeScale = 0.5f;
 			gameover = true;
+			source.pitch = 0.5f;
+			source.PlayOneShot(deadAudio);
+			MainScript.ms.dying();
 			Instantiate(blood, transform.position, Quaternion.Euler(transform.eulerAngles));
 			GetComponent<Rigidbody2D>().angularVelocity = -angularSpin;
 			Invoke ("Reset", resetDelay);

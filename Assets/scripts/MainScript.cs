@@ -16,6 +16,10 @@ public class MainScript : MonoBehaviour {
 	public static MainScript ms = null;
 
 	private int highScore;
+
+	public AudioClip dingAudio;
+
+	private AudioSource background;
 	
 	// function to be executed once the script started
 	void Start () {
@@ -34,6 +38,8 @@ public class MainScript : MonoBehaviour {
 		InvokeRepeating("CreateObstacle", 0f, 1.5f);
 
 		score = 0;
+
+		background = GetComponent<AudioSource> ();
 	}
 	
 	// function called by InvokeRepeating function
@@ -70,8 +76,13 @@ public class MainScript : MonoBehaviour {
 	}
 
 	public void pointUp(){
+		background.PlayOneShot (dingAudio);
 		score++;
 		scoreText.text = "Score: " + score/2;
+	}
+
+	public void dying(){
+		background.pitch = 0.5f;
 	}
 
 	public void setHighScore(){
