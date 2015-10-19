@@ -20,6 +20,10 @@ public class BirdScript : MonoBehaviour {
 	private bool startGame = false;
 
 	public static BirdScript bird = null;
+
+	public Sprite flap_sprite;
+	public Sprite fly_sprite;
+	private SpriteRenderer spriteRenderer;
 	
 	// function to be executed once the bird is created
 	void Awake () {
@@ -32,6 +36,11 @@ public class BirdScript : MonoBehaviour {
 
 		// placing the bird
 		transform.position = new Vector2(-6f,0f);
+
+		spriteRenderer = GetComponent<SpriteRenderer>();
+		if (spriteRenderer.sprite == null){
+			spriteRenderer.sprite = fly_sprite;
+		}
 	}
 
 	// function to be executed at each frame
@@ -49,6 +58,9 @@ public class BirdScript : MonoBehaviour {
 				transform.position = new Vector2(-2f,0f);
 				startGame = true;
 			}
+
+			spriteRenderer.sprite = flap_sprite;
+			Invoke("toFly", .2f);
 
 			source.PlayOneShot(flapAudio);
 
@@ -98,9 +110,13 @@ public class BirdScript : MonoBehaviour {
 			source.PlayOneShot(deadAudio);
 			MainScript.ms.dying();
 			Instantiate(blood, transform.position, Quaternion.Euler(transform.eulerAngles));
-			GetComponent<Rigidbody2D>().angularVelocity = -angularSpin;
+			GetComponent<Rigidbody2D>().angularVelocity = -500;
 			Invoke ("Reset", resetDelay);
 		}
+	}
+
+	void toFly(){
+		spriteRenderer.sprite = fly_sprite;
 	}
 
 	public bool isGameOver(){

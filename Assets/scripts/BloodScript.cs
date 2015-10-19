@@ -5,12 +5,12 @@ public class BloodScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		transform.position = BirdScript.bird.transform.position;
+		transform.position = BirdScript.bird.transform.position-(new Vector3(0f,0f,10f));
 		transform.eulerAngles = new Vector3 (0f, 0f, 45f);
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		transform.position = BirdScript.bird.transform.position;
+		transform.position = BirdScript.bird.transform.position-(new Vector3(0f,0f,10f));
 	}
 }
