@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿//dafont.com
+using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
 
@@ -20,6 +21,8 @@ public class MainScript : MonoBehaviour {
 	public AudioClip dingAudio;
 
 	private AudioSource background;
+
+	public GameObject grassObject;
 	
 	// function to be executed once the script started
 	void Start () {
@@ -40,6 +43,9 @@ public class MainScript : MonoBehaviour {
 		score = 0;
 
 		background = GetComponent<AudioSource> ();
+
+		createGrass (0f);
+		createGrass (6.4f);
 	}
 	
 	// function called by InvokeRepeating function
@@ -60,11 +66,11 @@ public class MainScript : MonoBehaviour {
 	}
 
 	public void hideScoreText(){
-		scoreText.text = "High Score: " + highScore;
+		scoreText.text = "High SCore: " + highScore;
 	}
 	
 	public void showScoreText(){
-		scoreText.text = "Score: " + score/2;
+		scoreText.text = "SCore: " + score/2;
 	}
 
 	public void hideInstrucText(){
@@ -78,7 +84,7 @@ public class MainScript : MonoBehaviour {
 	public void pointUp(){
 		background.PlayOneShot (dingAudio);
 		score++;
-		scoreText.text = "Score: " + score/2;
+		scoreText.text = "SCore: " + score/2;
 	}
 
 	public void dying(){
@@ -92,5 +98,10 @@ public class MainScript : MonoBehaviour {
 			PlayerPrefs.SetInt ("High Score", highScore);
 			print (PlayerPrefs.GetInt("High Score"));
 		}
+	}
+
+	public void createGrass(float pos){
+		GameObject grass = Instantiate (grassObject);
+		grass.transform.position = new Vector2 (pos, 0f);
 	}
 }

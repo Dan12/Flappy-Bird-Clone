@@ -24,6 +24,9 @@ public class BirdScript : MonoBehaviour {
 	public Sprite flap_sprite;
 	public Sprite fly_sprite;
 	private SpriteRenderer spriteRenderer;
+
+	public float moveBackSpeed = 0.05f;
+	private bool birdMoved = false;
 	
 	// function to be executed once the bird is created
 	void Awake () {
@@ -35,7 +38,7 @@ public class BirdScript : MonoBehaviour {
 		source = GetComponent<AudioSource>();
 
 		// placing the bird
-		transform.position = new Vector2(-6f,0f);
+		transform.position = new Vector2(0f,0f);
 
 		spriteRenderer = GetComponent<SpriteRenderer>();
 		if (spriteRenderer.sprite == null){
@@ -48,6 +51,16 @@ public class BirdScript : MonoBehaviour {
 		// getting the real position, in pixels, of the bird on the stage
 		Vector2 stagePos = Camera.main.WorldToScreenPoint(transform.position);
 
+		if (startGame && !birdMoved) {
+			if (transform.position.x > -2f) {
+				transform.position = new Vector3 (transform.position.x - moveBackSpeed, transform.position.y, transform.position.z);
+				if (transform.position.x < -2f)
+					transform.position = new Vector3 (-2f, transform.position.y, transform.position.z);
+				if(transform.position.x == -2f)
+					birdMoved = true;
+			}
+		}
+
 		// waiting for mouse input
 		if (Input.GetButtonDown("Fire1") && stagePos.y < Screen.height && !gameover) {
 			if(!startGame){
@@ -55,7 +68,6 @@ public class BirdScript : MonoBehaviour {
 				MainScript.ms.hideInstrucText();
 				MainScript.ms.showScoreText();
 				// placing the bird
-				transform.position = new Vector2(-2f,0f);
 				startGame = true;
 			}
 
