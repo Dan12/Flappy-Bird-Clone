@@ -16,8 +16,8 @@ public class GrassScript : MonoBehaviour {
 		if(BirdScript.bird.isGameOver())
 			GetComponent<Rigidbody2D>().velocity = Vector2.zero;
 		// checking x position
-		if(transform.position.x<-6.4f){
-			MainScript.ms.createGrass(6.4f);
+		if(transform.position.x<-12.8f){
+			MainScript.ms.createGrass(12.8f);
 			// destroying the pipe and freeing memory and resources
 			Destroy(gameObject);
 		}

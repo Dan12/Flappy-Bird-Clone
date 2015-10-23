@@ -24,7 +24,7 @@ public class PipeScript : MonoBehaviour {
 			Destroy(gameObject);
 		}
 
-		if (transform.position.x < -2.5 && !addedScore) {
+		if (transform.position.x < -2.6 && !addedScore) {
 			MainScript.ms.pointUp ();
 			addedScore = true;
 		}

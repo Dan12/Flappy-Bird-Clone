@@ -27,6 +27,8 @@ public class BirdScript : MonoBehaviour {
 
 	public float moveBackSpeed = 0.05f;
 	private bool birdMoved = false;
+
+	private bool gameOverScreenShow = false;
 	
 	// function to be executed once the bird is created
 	void Awake () {
@@ -59,6 +61,10 @@ public class BirdScript : MonoBehaviour {
 				if(transform.position.x == -2f)
 					birdMoved = true;
 			}
+		}
+
+		if (Input.GetButtonDown ("Fire1") && gameOverScreenShow) {
+			Reset();
 		}
 
 		// waiting for mouse input
@@ -94,7 +100,7 @@ public class BirdScript : MonoBehaviour {
 			GetComponent<Rigidbody2D>().velocity = Vector2.zero;
 
 		// if the bird leaves the stage...
-		if (stagePos.y < 0 && GetComponent<Rigidbody2D>().velocity.y < 0){
+		if (stagePos.y < 20 && GetComponent<Rigidbody2D>().velocity.y < 0){
 			jump ();
 			// ... call die function
 			die();
@@ -102,10 +108,12 @@ public class BirdScript : MonoBehaviour {
 	}
 
 	void jump(){
-		// setting bird's rigid body velocity to zero
-		GetComponent<Rigidbody2D>().velocity = Vector2.zero;
-		// adding jump force to bird's rigid body
-		GetComponent<Rigidbody2D>().AddForce(jumpForce);
+		if (!gameOverScreenShow) {
+			// setting bird's rigid body velocity to zero
+			GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
+			// adding jump force to bird's rigid body
+			GetComponent<Rigidbody2D> ().AddForce (jumpForce);
+		}
 	}
 	
 	// function to be executed once the bird enters in collision with anything
@@ -123,7 +131,7 @@ public class BirdScript : MonoBehaviour {
 			MainScript.ms.dying();
 			Instantiate(blood, transform.position, Quaternion.Euler(transform.eulerAngles));
 			GetComponent<Rigidbody2D>().angularVelocity = -500;
-			Invoke ("Reset", resetDelay);
+			Invoke ("gameOverScreen", resetDelay);
 		}
 	}
 
@@ -139,13 +147,20 @@ public class BirdScript : MonoBehaviour {
 		return startGame;
 	}
 
-	void Reset(){
+	void gameOverScreen(){
 		MainScript.ms.setHighScore ();
 		Time.timeScale = 1f;
-		gameover = false;
-		startGame = false;
+		MainScript.ms.showInstructText ();
+		MainScript.ms.setInstructTextToGameover ();
+		gameOverScreenShow = true;
+		GetComponent<Rigidbody2D>().isKinematic = true;
+	}
+
+	void Reset(){
+		//gameover = false;
+		//startGame = false;
 		//MainScript.ms.showInstructText();
-		MainScript.ms.hideScoreText ();
+		//MainScript.ms.hideScoreText ();
 		// reload the current scene - actually restart the game
 		Application.LoadLevel(Application.loadedLevel);
 	}

@@ -44,13 +44,15 @@ public class MainScript : MonoBehaviour {
 
 		background = GetComponent<AudioSource> ();
 
+		createGrass (-6.4f);
 		createGrass (0f);
 		createGrass (6.4f);
+		createGrass (12.8f);
 	}
 	
 	// function called by InvokeRepeating function
 	void CreateObstacle(){
-		if (BirdScript.bird.isGameStarted ()) {
+		if (BirdScript.bird.isGameStarted () && !BirdScript.bird.isGameOver()) {
 			// generating random upper pipe position
 			float randomPos = 4f - (4f - 0.8f - pipeHole) * Random.value;
 			// adding upper pipe to stage
@@ -91,12 +93,16 @@ public class MainScript : MonoBehaviour {
 		background.pitch = 0.5f;
 	}
 
+	public void setInstructTextToGameover(){
+		instructText.text = "Tap to\ntry again";
+	}
+
 	public void setHighScore(){
-		print (highScore);
+		//print (highScore);
 		if (score/2 > highScore) {
 			highScore = score/2;
 			PlayerPrefs.SetInt ("High Score", highScore);
-			print (PlayerPrefs.GetInt("High Score"));
+			//print (PlayerPrefs.GetInt("High Score"));
 		}
 	}
 
